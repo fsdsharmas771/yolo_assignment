@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import session from "express-session";
 
 config({
   path: "./config/config.env",
@@ -18,7 +19,16 @@ app.use(
 
 app.use(cookieParser());
 app.use(cors());
-
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+import user from "./routes/userRoutes.js";
+app.use("/api/v1/user", user);
 export default app;
 
 app.get("/", (req, res) =>
